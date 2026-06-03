@@ -37,4 +37,36 @@ export class UsersService {
       data: user,
     };
   }
+
+  async update(id: number, payload: Partial<CreateUserDto>) {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      throw new ConflictException('User not found');
+    }
+
+    Object.assign(user, payload);
+
+    await this.userRepository.save(user);
+
+    return {
+      success: true,
+      data: user,
+    };
+  }
+
+  async delete(id: number) {
+    const user = await this.userRepository.findOneBy({ id });
+
+    if (!user) {
+      throw new ConflictException('User not found');
+    }
+
+    await this.userRepository.delete({ id });
+
+    return {
+      success: true,
+      data: null,
+    };
+  }
 }

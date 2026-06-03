@@ -1,4 +1,12 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos';
 import { ApiResponse } from '@nestjs/swagger';
@@ -37,5 +45,36 @@ export class UsersController {
   })
   async create(@Body() payload: CreateUserDto) {
     return await this.usersService.create(payload);
+  }
+
+  @Put(':id')
+  @ApiResponse({
+    status: 200,
+    example: {
+      success: true,
+      data: {
+        id: 1,
+        name: 'Updated name',
+        age: 18,
+      },
+    },
+  })
+  async update(
+    @Body() payload: Partial<CreateUserDto>,
+    @Param('id') id: number,
+  ) {
+    return await this.usersService.update(id, payload);
+  }
+
+  @Delete(':id')
+  @ApiResponse({
+    status: 200,
+    example: {
+      success: true,
+      data: null,
+    },
+  })
+  async delete(@Param('id') id: number) {
+    return await this.usersService.delete(id);
   }
 }

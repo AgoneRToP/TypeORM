@@ -46,4 +46,36 @@ export class PostsService {
       data: post,
     };
   }
+
+  async update(id: number, payload: Partial<CreatePostDto>) {
+    const post = await this.postRepository.findOneBy({ id });
+
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+
+    Object.assign(post, payload);
+
+    await this.postRepository.save(post);
+
+    return {
+      success: true,
+      data: post,
+    };
+  }
+
+  async delete(id: number) {
+    const post = await this.postRepository.findOneBy({ id });
+
+    if (!post) {
+      throw new NotFoundException('Post not found');
+    }
+
+    await this.postRepository.remove(post);
+
+    return {
+      success: true,
+      data: post,
+    };
+  }
 }
